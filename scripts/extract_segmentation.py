@@ -113,7 +113,7 @@ def iterate_dataset(dataloader, destpath, model):
     print("Processed {} files. Bye.".format(num_processed))
 
 
-from taming.data.sflckr import Examples
+from forks.taming_transformers.taming.data.sflckr import Examples
 from torch.utils.data import DataLoader
 
 if __name__ == "__main__":
