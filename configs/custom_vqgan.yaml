@@ -40,4 +40,3 @@ data:
       params:
         test_images_list_file: some/test.txt
         size: 256
-
