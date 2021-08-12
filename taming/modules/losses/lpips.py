@@ -28,8 +28,7 @@ class LPIPS(nn.Module):
     def load_from_pretrained(self, name="vgg_lpips"):
         lpips_dir = os.path.dirname(os.path.abspath(__file__))
         modeling_cache_dir = os.path.join(
-            lpips_dir, "../../../../bigotis/models/taming/.modeling_cache")
-        os.makedirs(modeling_cache_dir, exist_ok=True)
+            lpips_dir, "../../../../../bigotis/models/taming/.modeling_cache")
 
         ckpt = get_ckpt_path(name, modeling_cache_dir)
         self.load_state_dict(
