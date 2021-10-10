@@ -41,11 +41,7 @@ data:
         onehot_segmentation: true
         use_stuffthing: true
     validation:
-<<<<<<< HEAD
       target: forks.taming_transformers.taming.data.coco.CocoImagesAndCaptionsTrain
-=======
-      target: taming.data.coco.CocoImagesAndCaptionsValidation
->>>>>>> upstream/master
       params:
         size: 256
         crop_size: 256

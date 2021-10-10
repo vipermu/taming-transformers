@@ -4,17 +4,10 @@ import pytorch_lightning as pl
 
 from forks.taming_transformers.main import instantiate_from_config
 
-<<<<<<< HEAD
 from forks.taming_transformers.taming.modules.diffusionmodules.model import Encoder, Decoder
 from forks.taming_transformers.taming.modules.vqvae.quantize import VectorQuantizer2 as VectorQuantizer
 from forks.taming_transformers.taming.modules.vqvae.quantize import GumbelQuantize
 
-=======
-from taming.modules.diffusionmodules.model import Encoder, Decoder
-from taming.modules.vqvae.quantize import VectorQuantizer2 as VectorQuantizer
-from taming.modules.vqvae.quantize import GumbelQuantize
-from taming.modules.vqvae.quantize import EMAVectorQuantizer
->>>>>>> upstream/master
 
 class VQModel(pl.LightningModule):
     def __init__(self,
