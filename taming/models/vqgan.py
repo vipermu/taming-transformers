@@ -4,10 +4,17 @@ import pytorch_lightning as pl
 
 from forks.taming_transformers.main import instantiate_from_config
 
+<<<<<<< HEAD
 from forks.taming_transformers.taming.modules.diffusionmodules.model import Encoder, Decoder
 from forks.taming_transformers.taming.modules.vqvae.quantize import VectorQuantizer2 as VectorQuantizer
 from forks.taming_transformers.taming.modules.vqvae.quantize import GumbelQuantize
 
+=======
+from taming.modules.diffusionmodules.model import Encoder, Decoder
+from taming.modules.vqvae.quantize import VectorQuantizer2 as VectorQuantizer
+from taming.modules.vqvae.quantize import GumbelQuantize
+from taming.modules.vqvae.quantize import EMAVectorQuantizer
+>>>>>>> upstream/master
 
 class VQModel(pl.LightningModule):
     def __init__(self,
@@ -361,3 +368,44 @@ class GumbelVQ(VQModel):
         log["inputs"] = x
         log["reconstructions"] = x_rec
         return log
+
+
+class EMAVQ(VQModel):
+    def __init__(self,
+                 ddconfig,
+                 lossconfig,
+                 n_embed,
+                 embed_dim,
+                 ckpt_path=None,
+                 ignore_keys=[],
+                 image_key="image",
+                 colorize_nlabels=None,
+                 monitor=None,
+                 remap=None,
+                 sane_index_shape=False,  # tell vector quantizer to return indices as bhw
+                 ):
+        super().__init__(ddconfig,
+                         lossconfig,
+                         n_embed,
+                         embed_dim,
+                         ckpt_path=None,
+                         ignore_keys=ignore_keys,
+                         image_key=image_key,
+                         colorize_nlabels=colorize_nlabels,
+                         monitor=monitor,
+                         )
+        self.quantize = EMAVectorQuantizer(n_embed=n_embed,
+                                           embedding_dim=embed_dim,
+                                           beta=0.25,
+                                           remap=remap)
+    def configure_optimizers(self):
+        lr = self.learning_rate
+        #Remove self.quantize from parameter list since it is updated via EMA
+        opt_ae = torch.optim.Adam(list(self.encoder.parameters())+
+                                  list(self.decoder.parameters())+
+                                  list(self.quant_conv.parameters())+
+                                  list(self.post_quant_conv.parameters()),
+                                  lr=lr, betas=(0.5, 0.9))
+        opt_disc = torch.optim.Adam(self.loss.discriminator.parameters(),
+                                    lr=lr, betas=(0.5, 0.9))
+        return [opt_ae, opt_disc], []                                           
